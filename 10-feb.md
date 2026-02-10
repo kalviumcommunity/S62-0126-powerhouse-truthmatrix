@@ -1,3 +1,5 @@
+Reading & Interpreting a Sample Data Science Project Repository
+
 The document describes reading and understanding a data science project repository through its sample data science project. 
 
 The data from the academic awesome-datascience GitHub repository serves as the repository for this analysis.

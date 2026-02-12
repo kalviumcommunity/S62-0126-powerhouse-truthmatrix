@@ -50,11 +50,14 @@ conda env list
 
 output:
 
-*# conda environments:
+```
+# conda environments:
 #
 # * -> active
 # + -> frozen
-base                 *   D:\anagonda*
+base                 *   D:\anaconda
+```
+
 
 This indicates the current active environment
 

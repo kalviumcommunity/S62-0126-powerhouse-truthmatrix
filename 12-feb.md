@@ -86,9 +86,9 @@ command:
 python 
 
 command:
-
+```
 >>> print("Environment Ready")
-
+```
 output:
 
 Environment Ready

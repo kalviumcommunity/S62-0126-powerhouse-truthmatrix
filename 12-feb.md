@@ -47,6 +47,22 @@ command - python
 command - >>> print("Environment Ready")
 output - Environment Ready
 
+Steps Followed
+
+    1. Installed Python from the official website.
+
+    2. Verified Python installation using python --version.
+
+    3. Installed Anaconda from the official website.
+
+    4. Verified Conda installation using conda --version.
+
+    5. Checked active environment using conda env list.
+
+    6. Verified Jupyter installation using jupyter --version.
+
+    7. Performed a functional test in Python terminal.
+
 **Conclusion**
 
 Python, Anaconda, Conda environment, and Jupyter Notebook are successfully installed and verified.

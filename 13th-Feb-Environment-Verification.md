@@ -190,14 +190,4 @@ The local development environment has been fully verified.
 
 This machine is certified and ready for the Data Science sprint.
 
-<<<<<<< HEAD
-=======
----
-
-## Verification Artifacts
-
-* Pull Request: (Add PR link here)
-* Walkthrough Video: (Add video link here)
-
->>>>>>> 66e10b79853d3424c69b722713680e6eb3540227
 ---

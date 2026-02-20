@@ -163,8 +163,3 @@ The **Awesome Data Science repository** provides complete educational resources 
 The resource provides **beginners and intermediate learners** with essential knowledge which enables them to establish a solid foundation in data science. By understanding how to read and interpret repository structures, you can effectively navigate similar projects and contribute meaningfully to the data science community.
 
 ---
-
-Few changes have been made on 10-feb.md
-**Last update** on feb 10th
-
-

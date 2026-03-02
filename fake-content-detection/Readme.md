@@ -1,90 +1,98 @@
-**Multimodal Fake Content Detection Using Data Science and Machine Learning**
+# Multimodal Fake Content Detection
 
-*Project Overview*
+This project detects fake content using:
+- a **text classifier** (TF-IDF + Logistic Regression)
+- an **image classifier** (MobileNetV2 transfer learning)
+- a **multimodal fusion** rule (average probability)
 
-This project aims to build an automated system for detecting fake content using machine learning techniques. The system analyzes both textual news articles and manipulated images to identify misinformation effectively.
+## 1) Environment Setup
 
-The project combines Natural Language Processing (NLP) for text analysis and Computer Vision techniques for image analysis to create a multimodal fake content detection system.
+From the repository root:
 
-*Domain*
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r fake-content-detection/requirements.txt
+```
 
-Data Science
+## 2) Dataset Structure
 
-Machine Learning
+Create the following structure before training:
 
-Natural Language Processing (NLP)
-
-Computer Vision
-
-*Problem Statement*
-
-Fake content in the form of misleading news articles and manipulated or AI-generated images is becoming increasingly difficult to identify. Manual verification methods are slow and not scalable.
-
-This project focuses on developing an automated system that can:
-
-    Analyze textual news content
-
-    Detect misleading or fake information
-
-    Identify manipulated or AI-generated images
-
-    Provide accurate, data-driven predictions
-
-*Project Structure*
-
+```text
 fake-content-detection/
-│
 ├── data/
 │   ├── raw/
-│   ├── processed/
-│
-├── notebooks/
-├── src/
+│   │   └── news.csv
+│   └── images/
+│       ├── real/
+│       │   ├── img1.jpg
+│       │   └── ...
+│       └── fake/
+│           ├── img1.jpg
+│           └── ...
+```
+
+### `news.csv` format
+- Required columns:
+  - `text`
+  - `label` (`0` = real, `1` = fake)
+
+## 3) Training Commands
+
+### Train Text Model
+
+```bash
+python fake-content-detection/src/train_text_model.py --data fake-content-detection/data/raw/news.csv --model-dir fake-content-detection/models
+```
+
+### Train Image Model
+
+```bash
+python fake-content-detection/src/train_image_model.py --data-dir fake-content-detection/data/images --output-model fake-content-detection/models/image_model.h5 --epochs 5
+```
+
+## 4) Inference Command (End-to-End Multimodal)
+
+```bash
+python fake-content-detection/src/predict_multimodal.py --model-dir fake-content-detection/models
+```
+
+The script prompts for:
+- news text input
+- image path
+
+## 5) Expected Output Files After Training
+
+```text
+fake-content-detection/
 ├── models/
-├── outputs/
+│   ├── text_model.pkl
+│   ├── tfidf_vectorizer.pkl
+│   └── image_model.h5
 ├── reports/
-├── requirements.txt
-└── README.md
+│   ├── text_metrics.txt
+│   └── image_metrics.txt
+└── outputs/
+    ├── text_confusion_matrix.png
+    └── image_training_plot.png
+```
 
-*Folder Description*
+Reports include the fixed random seed value (`Seed: 42`) for reproducibility.
 
-data/
+## 6) Example CLI Usage
 
-raw/ – Stores original, unmodified datasets
+```text
+$ python fake-content-detection/src/predict_multimodal.py
+Enter news text: Government confirms new climate policy implementation.
+Enter image path: fake-content-detection/data/images/fake/sample1.jpg
+Text probability (fake): 0.2314
+Image probability (fake): 0.8129
+Final fused decision: Fake (score: 0.5222)
+```
 
-processed/ – Stores cleaned and transformed datasets
+## 7) Notes
 
-notebooks/
-
-Contains Jupyter notebooks used for data exploration, experimentation, and model development.
-
-src/
-
-Contains reusable Python scripts for preprocessing, model training, and prediction logic.
-
-models/
-
-Stores trained machine learning models.
-
-outputs/
-
-Stores generated results such as plots, evaluation metrics, and prediction outputs.
-
-reports/
-
-Contains documentation, project summaries, and related materials.
-
-*Purpose of This Structure*
-
-This structure ensures:
-
-    Clear separation of code, data, and outputs
-
-    Protection of raw datasets
-
-    Easy debugging and maintenance
-
-    Smooth collaboration
-
-    Reproducibility of results
----
+- Both training scripts validate required dataset paths.
+- Inference validates required model artifacts before loading.
+- If required files are missing, the scripts raise clear error messages.

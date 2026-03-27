@@ -89,13 +89,19 @@ def unified_predict(
 
     used_count = len(result["used_modalities"])
 
-    if used_count == 2 and text_score is not None and image_score is not None:
-        final_label, final_conf = fuse_predictions(
-            text_score=text_score,
-            image_score=image_score,
-            text_weight=text_weight,
-            image_weight=image_weight,
+    if used_count == 2 and result["text"] is not None and result["image"] is not None:
+        fusion_output = fuse_predictions(
+            text_prediction={
+                "label": result["text"]["label"],
+                "confidence": result["text"]["confidence"],
+            },
+            image_prediction={
+                "label": result["image"]["label"],
+                "confidence": result["image"]["confidence"],
+            },
         )
+        final_label = str(fusion_output["label"])
+        final_conf = float(fusion_output["confidence"])
         result["fusion"] = {
             "text_weight": float(text_weight),
             "image_weight": float(image_weight),

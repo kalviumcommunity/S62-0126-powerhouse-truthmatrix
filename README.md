@@ -1,216 +1,183 @@
-# TruthMatrix: Multimodal Fake Content Detection Using Data Science and Machine Learning
+# Multimodal Fake Content Detection using Text and Image Fusion
 
-## 📌 Project Overview
-TruthMatrix is an automated system designed to detect fake or misleading content using machine learning techniques. It analyzes both textual news articles and manipulated images to identify misinformation effectively.
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](#tech-stack)
+[![Streamlit](https://img.shields.io/badge/UI-Streamlit-red.svg)](#features)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](#license)
 
-The system combines:
-- 🧠 Natural Language Processing (NLP) for text analysis
-- 👁️ Computer Vision techniques for image analysis
+Production-oriented AI system for detecting potentially fake content by combining text and image intelligence. The project delivers classification, confidence scoring, explainability, and analytics in a unified Streamlit interface.
 
-Together, these form a **multimodal fake content detection system**.
+## Problem Statement
+Misinformation now spreads through both language and visual manipulation. Single-modality systems often miss cross-signal inconsistencies, resulting in false negatives or low-confidence predictions.
 
----
+This project addresses that gap with a multimodal pipeline that:
+1. Detects fake vs real signals in text.
+2. Detects fake vs real signals in images.
+3. Fuses model outputs into a final decision.
+4. Provides interpretable scoring and analysis for trust-aware decision making.
 
-## 🎯 Objectives
-- Detect fake or misleading news articles
-- Identify manipulated or AI-generated images
-- Build a scalable and automated detection system
-- Provide confidence-based predictions
+## Features
+1. Multimodal AI fusion:
+Text and image models are combined into one final prediction using confidence-aware fusion logic.
+2. Truth Score:
+Computes a weighted score from text, image, and fusion confidence to produce a 0-100 reliability signal.
+3. Credibility Score:
+Scores content based on sentiment polarity, exaggerated language, and model confidence.
+4. Explainability engine:
+Generates reasons behind classification (clickbait terms, emotional tone, pattern mismatch cues).
+5. Analytics dashboard:
+Includes distribution, model comparison, and confusion matrix visualizations.
+6. Production-style UI:
+Multi-tab Streamlit app for detection, analytics, and model insights.
 
----
+## Tech Stack
+1. Language: Python
+2. ML/NLP: scikit-learn, NumPy, pandas
+3. Deep Learning/CV: TensorFlow, PIL
+4. Visualization: Matplotlib
+5. App Layer: Streamlit
+6. Experimentation: Jupyter Notebook
 
-## 🧩 Domain
-- Data Science  
-- Machine Learning  
-- Natural Language Processing (NLP)  
-- Computer Vision  
-
----
-
-## ❗ Problem Statement
-Fake content in the form of misleading news articles and manipulated or AI-generated images is becoming increasingly difficult to identify. Manual verification methods are slow and not scalable.
-
-This project focuses on developing an automated system that can:
-- Analyze textual news content  
-- Detect misleading or fake information  
-- Identify manipulated or AI-generated images  
-- Provide accurate, data-driven predictions  
-
----
-
-## 🏗️ Project Structure
+## Architecture Diagram (Text-Based)
+```text
+                    +-------------------------+
+                    |   User Input Layer      |
+                    |  - Text Content         |
+                    |  - Uploaded Image       |
+                    +-----------+-------------+
+                                |
+             +------------------+------------------+
+             |                                     |
+   +---------v---------+                 +---------v---------+
+   | Text Pipeline     |                 | Image Pipeline    |
+   | - preprocessing   |                 | - preprocessing   |
+   | - text model      |                 | - CNN model       |
+   +---------+---------+                 +---------+---------+
+             |                                     |
+             +------------------+------------------+
+                                |
+                     +----------v----------+
+                     |  Fusion Engine      |
+                     |  - agreement logic  |
+                     |  - confidence logic |
+                     +----------+----------+
+                                |
+       +------------------------+------------------------+
+       |                                                 |
++------v----------------+                 +--------------v--------------+
+| Scoring & Explanation |                 | Analytics & Visualization   |
+| - Truth Score (0-100) |                 | - Fake vs Real pie chart    |
+| - Credibility Score   |                 | - Accuracy comparison bar   |
+| - Risk Level          |                 | - Confusion matrix          |
++------+----------------+                 +--------------+--------------+
+       |                                                  |
+       +------------------------+-------------------------+
+                                |
+                     +----------v----------+
+                     | Streamlit UI        |
+                     | Tabs:               |
+                     | 1) Detect Content   |
+                     | 2) Analytics        |
+                     | 3) Model Insights   |
+                     +---------------------+
 ```
-fake-content-detection/
-│
-├── data/
-│ ├── raw/
-│ ├── processed/
-│
-├── notebooks/
-├── src/
-├── models/
-├── outputs/
-├── reports/
-│
-├── requirements.txt
-└── README.md
+
+## Screenshots
+Add real screenshots after UI deployment:
+
+1. Detect Content tab
+![Detect Content](docs/screenshots/detect-content.png)
+
+2. Analytics tab
+![Analytics](docs/screenshots/analytics-dashboard.png)
+
+3. Model Insights tab
+![Model Insights](docs/screenshots/model-insights.png)
+
+4. Scoring cards (Truth + Credibility + Risk)
+![Scoring Cards](docs/screenshots/scoring-cards.png)
+
+## Project Structure
+```text
+S62-0126-powerhouse-truthmatrix/
+├── README.md
+└── truthmatrix/
+    ├── requirements.txt
+    ├── cli.py
+    ├── app/
+    │   └── streamlit_app.py
+    ├── notebooks/
+    │   └── eda.ipynb
+    └── src/
+        ├── train.py
+        ├── predict.py
+        ├── explain.py
+        ├── evaluate.py
+        ├── preprocess.py
+        ├── data_loader.py
+        ├── fusion/
+        │   ├── fusion.py
+        │   └── pipeline.py
+        └── image/
+            ├── model.py
+            ├── train.py
+            ├── predict.py
+            ├── preprocess.py
+            └── data_loader.py
 ```
 
----
-
-## 📁 Folder Description
-
-### `data/`
-- **raw/** – Stores original, unmodified datasets  
-- **processed/** – Stores cleaned and transformed datasets  
-
-### `notebooks/`
-Contains Jupyter notebooks used for:
-- Data exploration  
-- Experimentation  
-- Model development  
-
-### `src/`
-Contains reusable Python scripts for:
-- Data preprocessing  
-- Model training  
-- Prediction logic  
-
-### `models/`
-Stores trained machine learning models.
-
-### `outputs/`
-Stores generated results such as:
-- Plots  
-- Evaluation metrics  
-- Prediction outputs  
-
-### `reports/`
-Contains:
-- Documentation  
-- Project summaries  
-- Related materials  
-
----
-
-## ⚙️ Tech Stack
-- **Programming Language:** Python  
-- **Libraries:**
-  - NumPy, Pandas  
-  - Scikit-learn  
-  - TensorFlow / PyTorch  
-  - OpenCV  
-  - Matplotlib / Seaborn  
-- **Tools:**
-  - Jupyter Notebook  
-  - Git & GitHub  
-
----
-
-## 📊 Dataset
-The project uses datasets for:
-- Fake vs Real News Articles (text classification)
-- Real vs Manipulated Images (image classification)
-
-> Note: Datasets are stored in the `data/raw/` directory and processed before training.
-
----
-
-## 🤖 Model Details
-
-### 📝 Text Model
-- Preprocessing: Tokenization, stopword removal, vectorization (TF-IDF / embeddings)
-- Models used:
-  - Logistic Regression
-  - Naive Bayes
-  - LSTM / Transformer (optional advanced)
-
-### 🖼️ Image Model
-- Preprocessing: Resizing, normalization
-- Models used:
-  - Convolutional Neural Networks (CNN)
-  - Transfer Learning (ResNet / MobileNet)
-
----
-
-## 🔗 Multimodal Approach
-The system combines predictions from both text and image models to produce a final result.
-
-Example:
-- Text Prediction → 70% Fake  
-- Image Prediction → 85% Fake  
-- Final Output → Fake (High Confidence)
-
----
-
-## 📈 Evaluation Metrics
-- Accuracy  
-- Precision  
-- Recall  
-- F1 Score  
-- Confusion Matrix  
-
----
-
-## 🚀 Installation & Setup
-
-### 1. Clone the Repository
+## How to Run Locally
+### 1. Clone the repository
 ```bash
-git clone https://github.com/your-username/truthmatrix.git
+git clone https://github.com/your-org/your-repo.git
+cd S62-0126-powerhouse-truthmatrix
+```
+
+### 2. Create and activate virtual environment
+Windows:
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+```
+
+macOS/Linux:
+```bash
+python -m venv .venv
+source .venv/bin/activate
+```
+
+### 3. Install dependencies
+```bash
 cd truthmatrix
-```
-### 2. Create Virtual Environment
-```bash
-python -m venv venv
-source venv/bin/activate   # Mac/Linux
-venv\Scripts\activate      # Windows
-```
-
-### 3. Install Dependencies
-```bash
 pip install -r requirements.txt
 ```
 
-### ▶️ Usage
-**Run Text Detection**
-```
-python src/text_detection.py
-```
-**Run Image Detection**
-```
-python src/image_detection.py
-```
-**Run Full Pipeline**
-```
-python src/main.py
+### 4. Launch Streamlit app
+```bash
+streamlit run app/streamlit_app.py
 ```
 
-### 📤 Output
+### 5. Optional: run CLI
+```bash
+python cli.py
+```
 
-The system provides:
+## Evaluation and Metrics
+1. Accuracy, precision, recall, F1 score
+2. Confusion matrix analysis
+3. Class-wise confidence tracking
+4. Aggregate credibility and truth score trends
 
-- Prediction (Fake / Real)
-- Confidence Score
-- Evaluation Reports (in outputs/)
+## Future Improvements
+1. Calibrated uncertainty estimation across modalities.
+2. Transformer-based text encoder and vision transformer backbone.
+3. Active learning loop for human-in-the-loop moderation.
+4. Adversarial robustness testing for prompt/image perturbations.
+5. Drift monitoring and automatic re-training pipeline.
+6. REST API and containerized deployment with CI/CD.
+7. Role-based dashboards for analysts and moderators.
 
-### 🧪 Testing
+## License
+MIT License (recommended). Update this section based on your repository license.
 
-Basic testing can be performed using sample inputs available in the dataset or custom inputs.
-
-Future scope includes:
-
-- Unit testing using PyTest
-- API testing
-
-### 🔮 Future Enhancements
-- 🎥 Video deepfake detection
-- 🔊 Audio fake detection
-- 🌐 Web interface (React + Flask/FastAPI)
-- 📱 Real-time browser extension
-- 🧠 Explainable AI (why content is fake)
-
-### 💡 Key Features
-- Multimodal detection system
-- Scalable architecture
-- Modular code structure
-- Real-world applicability
+## Acknowledgments
+Built for practical misinformation detection research, rapid experimentation, and explainable AI workflows.

@@ -34,7 +34,7 @@ def unified_predict(
     text: str | None = None,
     image_path: str | Path | None = None,
     text_model_path: str | Path = Path(__file__).resolve().parents[2] / "models" / "model.pkl",
-    image_model_path: str | Path = Path(__file__).resolve().parents[2] / "models" / "image_model.h5",
+    image_model_path: str | Path | None = None,
     text_weight: float = 0.5,
     image_weight: float = 0.5,
 ) -> Dict[str, Any]:

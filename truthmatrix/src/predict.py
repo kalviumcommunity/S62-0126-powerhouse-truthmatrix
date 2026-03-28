@@ -19,6 +19,7 @@ def _build_feature_row(text: str) -> pd.DataFrame:
 	return pd.DataFrame(
 		[
 			{
+				"text": text,
 				"text_length": text_length,
 				"word_count": word_count,
 				"uppercase_ratio": uppercase_ratio,

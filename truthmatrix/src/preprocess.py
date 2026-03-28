@@ -58,7 +58,7 @@ def add_features(df: pd.DataFrame) -> pd.DataFrame:
 
 def prepare_features(
 	df: pd.DataFrame,
-	feature_cols: Iterable[str] = ("text_length", "word_count", "uppercase_ratio"),
+	feature_cols: Iterable[str] = ("text", "text_length", "word_count", "uppercase_ratio"),
 	target_col: str = "label",
 ) -> tuple[pd.DataFrame, pd.Series]:
 	"""Select relevant features and split into X and y."""

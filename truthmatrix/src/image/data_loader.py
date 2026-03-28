@@ -26,6 +26,22 @@ def load_image_datasets(
     if not root.exists():
         raise FileNotFoundError(f"Image directory not found: {root}")
 
+    required_folders = [root / "fake", root / "real"]
+    missing_folders = [str(folder) for folder in required_folders if not folder.exists()]
+    if missing_folders:
+        raise FileNotFoundError(
+            "Image dataset must include both class folders: 'fake' and 'real'. "
+            f"Missing: {', '.join(missing_folders)}"
+        )
+
+    fake_count = len(list((root / "fake").glob("*")))
+    real_count = len(list((root / "real").glob("*")))
+    if fake_count == 0 or real_count == 0:
+        raise ValueError(
+            "Both class folders must contain at least one image. "
+            f"Found fake={fake_count}, real={real_count}."
+        )
+
     train_ds = tf.keras.utils.image_dataset_from_directory(
         directory=str(root),
         labels="inferred",

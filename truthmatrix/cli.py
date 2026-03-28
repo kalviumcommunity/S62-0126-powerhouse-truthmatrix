@@ -59,12 +59,26 @@ def main() -> None:
         print("\nNo input provided. Please provide text and/or an image path.")
         return
 
-    result = unified_predict(
-        text=text,
-        image_path=image_path,
-        text_weight=args.text_weight,
-        image_weight=args.image_weight,
-    )
+    try:
+        result = unified_predict(
+            text=text,
+            image_path=image_path,
+            text_weight=args.text_weight,
+            image_weight=args.image_weight,
+        )
+    except FileNotFoundError as exc:
+        print("\nRequired model or input file is missing.")
+        print(f"Details: {exc}")
+        print("Hint: train models first and ensure paths are correct.")
+        return
+    except ValueError as exc:
+        print("\nInvalid input provided.")
+        print(f"Details: {exc}")
+        return
+    except Exception as exc:
+        print("\nUnexpected error while generating prediction.")
+        print(f"Details: {exc}")
+        return
 
     final = result.get("final") or {}
     label = final.get("label")

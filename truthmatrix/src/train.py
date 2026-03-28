@@ -1,17 +1,25 @@
 from __future__ import annotations
 
+import argparse
 import pickle
 from pathlib import Path
 from typing import Dict, Tuple
 
 import pandas as pd
 from sklearn.base import ClassifierMixin
+from sklearn.compose import ColumnTransformer
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
-from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
+from sklearn.svm import LinearSVC
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+from src.data_loader import load_data
+from src.evaluate import compare_models
+from src.preprocess import add_features, clean_data, prepare_features
 
 
 def split_data(
@@ -35,21 +43,70 @@ def split_data(
 def build_model_pipelines(random_state: int = 42) -> Dict[str, ClassifierMixin]:
 	"""Build model pipelines with scaling where needed.
 
-	Scaling is applied to Logistic Regression and KNN.
-	Decision Tree is used without scaling.
+	Uses a hybrid feature stack:
+	- TF-IDF from raw text
+	- Numeric engineered features
 	"""
+	numeric_features = ["text_length", "word_count", "uppercase_ratio"]
+
+	feature_transformer = ColumnTransformer(
+		transformers=[
+			(
+				"text_tfidf",
+				TfidfVectorizer(
+					ngram_range=(1, 2),
+					max_features=4000,
+					min_df=1,
+				),
+				"text",
+			),
+			(
+				"numeric",
+				Pipeline(steps=[("scaler", StandardScaler())]),
+				numeric_features,
+			),
+		],
+		remainder="drop",
+	)
+
 	models: Dict[str, ClassifierMixin] = {
 		"logistic_regression": Pipeline(
 			steps=[
-				("scaler", StandardScaler()),
-				("classifier", LogisticRegression(max_iter=1000, random_state=random_state)),
+				("features", feature_transformer),
+				(
+					"classifier",
+					LogisticRegression(
+						max_iter=2000,
+						random_state=random_state,
+						class_weight="balanced",
+					),
+				),
 			]
 		),
-		"decision_tree": DecisionTreeClassifier(random_state=random_state),
-		"knn": Pipeline(
+		"linear_svm": Pipeline(
 			steps=[
-				("scaler", StandardScaler()),
-				("classifier", KNeighborsClassifier(n_neighbors=5)),
+				("features", feature_transformer),
+				("classifier", LinearSVC(C=1.0, random_state=random_state)),
+			]
+		),
+		"decision_tree": Pipeline(
+			steps=[
+				("features", feature_transformer),
+				("classifier", DecisionTreeClassifier(random_state=random_state)),
+			]
+		),
+		"random_forest": Pipeline(
+			steps=[
+				("features", feature_transformer),
+				(
+					"classifier",
+					RandomForestClassifier(
+						n_estimators=300,
+						random_state=random_state,
+						class_weight="balanced",
+						n_jobs=-1,
+					),
+				),
 			]
 		),
 	}
@@ -145,4 +202,35 @@ def load_model(file_path: str | Path) -> ClassifierMixin:
 		model = pickle.load(file_obj)
 
 	return model
+
+
+def _parse_args() -> argparse.Namespace:
+	parser = argparse.ArgumentParser(description="Train and save the best text model.")
+	default_data = Path(__file__).resolve().parents[1] / "data" / "text" / "fake_news.csv"
+	default_model = Path(__file__).resolve().parents[1] / "models" / "model.pkl"
+	parser.add_argument("--data", type=str, default=str(default_data), help="Path to text CSV dataset.")
+	parser.add_argument("--output", type=str, default=str(default_model), help="Path to save best model pickle.")
+	return parser.parse_args()
+
+
+def main() -> None:
+	args = _parse_args()
+	df = load_data(args.data)
+	if df.empty:
+		raise ValueError("Dataset is empty or could not be loaded.")
+
+	df = clean_data(df)
+	df = add_features(df)
+	x, y = prepare_features(df)
+
+	models, x_train, x_test, y_train, y_test = train_models(x=x, y=y)
+	comparison_df = compare_models(models=models, x_test=x_test, y_test=y_test, print_results=True)
+	best_name, saved_path = save_best_model(models, comparison_df, file_path=args.output)
+
+	print(f"\nBest model: {best_name}")
+	print(f"Saved to: {saved_path}")
+
+
+if __name__ == "__main__":
+	main()
 

@@ -14,7 +14,7 @@ def build_preprocessing_pipeline() -> tf.keras.Sequential:
     """
     return tf.keras.Sequential(
         [
-            tf.keras.layers.Rescaling(1.0 / 255.0),
+            tf.keras.layers.Rescaling(1.0 / 127.5, offset=-1),
             tf.keras.layers.RandomFlip(mode="horizontal"),
             tf.keras.layers.RandomRotation(factor=0.1),
             tf.keras.layers.RandomZoom(height_factor=0.1, width_factor=0.1),
